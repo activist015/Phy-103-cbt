@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHY103 CBT Simulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .question-box {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-weight: bold;
+    }
+    button {
+      margin-top: 10px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>PHY103 CBT Simulator</h1>
+  <div id="quiz"></div>
+  <button onclick="submitQuiz()">Submit</button>
+  <p id="result"></p>
+  <script>
+    const questionBank = [
+      { q: "The SI unit of speed is:", options: ["m/s", "m/s²", "m²", "m"], answer: 0 },
+      { q: "A scalar quantity has:", options: ["Only magnitude", "Only direction", "Both", "Neither"], answer: 0 },
+      { q: "Velocity is:", options: ["Speed with direction", "Speed without direction", "Force per unit mass", "Displacement × time"], answer: 0 },
+      { q: "Newton’s First Law is also called:", options: ["Law of inertia", "Law of gravity", "Law of momentum", "Law of friction"], answer: 0 },
+      { q: "The SI unit of current is:", options: ["Ampere", "Coulomb", "Volt", "Ohm"], answer: 0 },
+      { q: "Heat flows from:", options: ["Hot to cold", "Cold to hot", "Both directions", "None"], answer: 0 },
+      { q: "The SI unit of energy is:", options: ["Joule", "Watt", "Newton", "Ampere"], answer: 0 },
+      { q: "Sound waves are:", options: ["Longitudinal", "Transverse", "Circular", "Electromagnetic"], answer: 0 },
+      { q: "SI unit of pressure:", options: ["Pascal", "Joule", "Watt", "Ampere"], answer: 0 },
+      { q: "Momentum is:", options: ["Mass × velocity", "Force × time", "Energy × speed", "Weight × volume"], answer: 0 },
+      { q: "What is the force on a 2 kg mass accelerating at 3 m/s²?", options: ["6 N", "5 N", "2 N", "3 N"], answer: 0 },
+      { q: "Power is:", options: ["Work done per unit time", "Force per distance", "Energy stored", "Mass × acceleration"], answer: 0 },
+      { q: "The unit of frequency is:", options: ["Hertz", "Decibel", "Ampere", "Volt"], answer: 0 },
+      { q: "In a series circuit:", options: ["Current is the same", "Voltage is the same", "Resistance is zero", "Current splits"], answer: 0 },
+      { q: "Work is done when:", options: ["Force causes displacement", "Energy is at rest", "No force applied", "Object remains static"], answer: 0 }
+    ];let shuffledQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 15);
+
+function loadQuiz() {
+  const quizDiv = document.getElementById("quiz");
+  shuffledQuestions.forEach((item, index) => {
+    const box = document.createElement("div");
+    box.className = "question-box";
+
+    const q = document.createElement("div");
+    q.className = "question";
+    q.textContent = `${index + 1}. ${item.q}`;
+
+    const options = item.options.map((opt, i) => {
+      return `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    }).join("");
+
+    box.innerHTML = `${q.outerHTML}${options}`;
+    quizDiv.appendChild(box);
+  });
+}
+
+function submitQuiz() {
+  let score = 0;
+  shuffledQuestions.forEach((item, i) => {
+    const selected = document.querySelector(`input[name='q${i}']:checked`);
+    const box = document.querySelectorAll('.question-box')[i];
+    if (selected) {
+      if (parseInt(selected.value) === item.answer) {
+        score++;
+        box.classList.add("correct");
+      } else {
+        box.classList.add("incorrect");
+      }
+    } else {
+      box.classList.add("incorrect");
+    }
+  });
+  document.getElementById("result").innerText = `You got ${score}/15 correct.`;
+}
+
+loadQuiz();
+setTimeout(() => {
+  alert("⏰ Time's up! Auto-submitting your answers.");
+  submitQuiz();
+}, 15 * 60 * 1000); // 15 minutes timer
+
+  </script>
+</body>
+</html>
